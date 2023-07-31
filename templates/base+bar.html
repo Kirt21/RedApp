@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>RedApp</title>
+
+</head>
+<style>
+    .dropdown_top{
+      padding-left:10px;
+      position: relative;
+      z-index: 10000;
+  } 
+   body{
+    background-color:	#f8f8fa;
+   }
+   .card{
+    background-color:	#FFFFFF!important;
+}
+   .btn{
+    color:black!important;
+   }
+   
+   a {
+    position: relative;
+    color:#000000;
+  }
+  a:hover{
+    color: #404040;
+  }
+
+  .group:hover{
+    color: #404040;
+    text-decoration: underline;
+  }
+  {% comment %} a::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      color: #C0C0C0;
+      border-radius: 2px;
+      background-color: #C0C0C0;
+      bottom: 0;
+      left: 0;
+      transform-origin: right;
+      transform: scaleX(0);
+      transition: transform .3s ease-in-out;
+    }
+  
+  a:hover::before {
+    transform-origin: left;
+    transform: scaleX(1);
+  } {% endcomment %}
+
+  </style> 
+<body>
+    <nav class="navbar navbar-expand-lg bg-light navbar-light">
+        <div class="container">
+        <a href='{% url "home" %}' class="navbar-brand " style="color:#F02510;">RedApp</a>
+            <div class="collapse navbar-collapse">
+              <ul class="navbar-nav ml-auto">
+                {% if request.user.is_authenticated %} 
+                <a href="/profile/{{request.user.username}}/">
+                 {%if request.user.profile_photo.url is not NONE%} 
+                 <img src={{request.user.profile_photo.url}} alt="profile picture" class="rounded-circle"  width="80px">
+                 {%else%}
+                 <img src="/app/files/default/profile photo.jpg" alt="profile picture" class="rounded-circle"  width="60px">
+                 {%endif%}
+                </a>
+                <div class="dropdown dropdown_top">
+                  <button class=" btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdown">
+                    <li><a class="dropdown-item" href="/profile/{{request.user.username}}/">Profile</a></li>
+                    {% comment %} <li><a class="dropdown-item" href="#">Settings</a></li> {% endcomment %}
+                    <li><a class="dropdown-item" href='{% url "logoutpage" %}'>Logout</a></li>
+                  </ul>
+                
+                </div>
+                {%else%} 
+                <li class="nav-item"><a class="nav-link" href='{% url "loginpage" %}'> Login </a></li>
+                <li class="nav-item"><a class="nav-link" href='{%url "registerpage"%}'> Register </a></li>
+                {%endif%}
+            </ul>
+            </div>   
+        </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg sticky-top" style="background: linear-gradient(to right, #FFBF00,#FF5F1F);">
+        <div class="container px-0" >
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="navbar">
+              <ul class="navbar-nav ml-4">
+                <li class="nav-item" style="color:black;"><a class="nav-link" href='{% url "home" %}'> Home </a></li>
+                 <li class="nav-item"> 
+                  <div class="dropdown">
+                    <div class ="nav-link group" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">MyGroups</div>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown">
+                      {%if g1 is not 0%}
+                      {%for g1 in g1%}
+                      <li><a class="dropdown-item" href="/room/{{g1.following.id}}/">{{g1.following.title}}</a></li>
+                      {%endfor%}
+                      {%else%}
+                      <li class="dropdown-item"><small>No groups following...</small></li>
+                      {%endif%}
+                  </ul>
+                    {% comment %} <a class="nav-link" href='{% url "groups" %}'>Groups</a></div> {% endcomment %}
+                  </div>
+                </div>
+              </div>
+                  </li> 
+              </ul>
+           
+                <form class="ml-auto" method="GET" action="{%url "home"%}">
+                      <div class="input-group input-group-sm">
+                        <input class="form-control form-control-sm" type='text' name='q' placeholder="Search..."/> 
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary" input type="submit">
+                            <i class="fa fa-search"></i> 
+                          </button>
+                          
+                      </div>
+                    </div>
+                </form>   
+            </div>   
+        </div>
+    </nav>
+    {% block content %}
+
+    {% endblock %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li style="color:black">{{ message }}</li>
+        {% endfor %}    
+    </ul>
+    {%endif%}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+{% include 'base+bar.html'%}
+{%block content%}
+<div class="container">
+    <br>
+    <h5>Are you sure to delete {{obj}}?</h5>
+    <br>
+
+
+<div class="form-group ">
+<form method="POST" action="">
+    {%csrf_token%}
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <button class="btn  btn-sm btn-outline-secondary"><a  style="color:black;" href="{{request.META.HTTP_REFERER}}">Cancel</a></button>
+    <input class="btn  btn-sm btn-outline-secondary" style="color:black;"  type="submit" value="Confirm"/>
+</form>
+</div>
+</div>
+{%endblock%}

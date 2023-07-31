@@ -1,0 +1,31 @@
+{% include 'base+bar.html'%}
+{% load static %}
+{% load i18n widget_tweaks %}
+{%block context%}
+<div class="container">
+    <br>
+    <h4>Register</h4>
+    <br>
+    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+    {%csrf_token%}
+    {%for field in form%}
+    <fieldset>
+        <div class="form-group ">
+        <label class="control-field">{{ field.label }}</label>
+        <div class="controls" style="height:1.5">
+            {{ field|attr:"class:form-control-file type:text" }}
+            
+        </div>
+        </div>
+    </fieldset>
+    {%endfor%}
+    <br>
+    <input class="btn  btn-sm btn-outline-secondary"  style="color:black;" type="submit" value="Register"/>  
+    </form>
+
+<br>
+<p >Already signed up?</p>
+<h5><a href="{%url "loginpage"%}">Login</a></h5>   
+
+</div> 
+{%endblock%}

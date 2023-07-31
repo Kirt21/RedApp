@@ -1,0 +1,24 @@
+<style>
+    table,th,td{}
+</style> 
+    <table style="width:100%">
+    <tr> 
+    <th>      
+    <form method="GET" action="{%url "home"%}">
+        <h4 align="left"><input type='text' name='q' placeholder="Search..."/>
+    </form>
+    </th>
+    <th>
+    {% if request.user.is_authenticated %}
+    <h4 align="right"><a href="{% url "logoutpage" %}">Logout</a></h4>
+    {%else%}
+    <h4 style="color:white;" align="right"><a href="{% url "loginpage" %}">Login </a>\   
+    <a href="{%url "registerpage"%}">Register</a></h4>
+    {% comment %} <a href="{% url "loginpage" %}">Login </a> {% endcomment %}
+    {%endif%} 
+    </th>
+    </tr>
+    </table>
+    
+
+       

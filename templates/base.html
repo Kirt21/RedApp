@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHATROOM</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <style>
+        table,th,td{}
+        div{
+            background-color: #101010;
+            border: 2px solid white;
+            padding: 30px;
+            margin: 10px;
+            border-radius:25px;
+            color:white;
+          }
+        a{
+            color:#0288D1
+        } 
+    </style>    
+</head> 
+<body> 
+    <table style="width:100%">
+    <tr>
+    <th style="width:90%"><a href="/"><h1 align="left">CHATROOM</h1></a></th>
+    {%if request.user.profile_photo.url is not NONE%} 
+    <th><img style="border-radius: 50%; width:70px;"
+       src={{request.user.profile_photo.url}} alt="profile picture"></th>
+    {%endif%}
+    <th><a href="/profile/{{request.user.username}}/"><h2 align="right">{{request.user.username}}</h2></th></a>
+    </tr>
+    </table>
+    
+    {% block content %}
+
+    {% endblock %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li style="color:white">{{ message }}</li>
+        {% endfor %}    
+    </ul>
+    {%endif%}
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+
+{% include 'base+bar.html'%}
+{%block context%}
+
+    <div class="container overflow-hidden">
+      <div class="row gx-10">
+      <div class="col-lg-9">
+      <br><br>
+      <div class="row mb-3">
+        <div class="col-lg-9">
+      <h5>Groups</h5>
+      </div>
+       {% comment %} <div class="col-lg-3">
+        <div class="dropdown dropdown_top d-flex justify-content-end">
+          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort</button>
+          <ul class="dropdown-menu" aria-labelledby="dropdown">
+            <li><a href="request.get_full_path == '/' %}?ordering=-popular" class="dropdown-item" >Popular</a></li>
+            <li><a class="dropdown-item" >New</a></li>
+          </ul> 
+      </div> 
+      </div> {% endcomment %}
+    </div>
+    
+    {%for i in l%}
+    <div class="card w-100 mb-4 ">
+      <div class="card-body">
+        <div class="row">
+           <small><div class="card-text mb-3 text-muted "><a href="{% url "home" %}?q={{i.title}}"> {{i.topic}}</a></div></small>
+           <small><div class="card-text mb-3 ml-5">Created by :</div> </small>
+           <small><div class="card-text mb-3 ml-2 text-muted"><a href="/profile/{{i.host.username}}/"> {{i.host.username}}</a></div></small>                 
+           <small><div class="card-text mb-3 ml-3">{{i.created|timesince}} ago..</div> </small>
+          </div>
+        <div class="row">
+        <h6><div class="card-title"><a href="/room/{{i.id}}/">{{i.title}}</a></div></h6>     
+      </div>
+      {%if i.desc%}
+      <div class="row">
+      <small><div class="card-text mb-2">{{i.desc}}</div></small>
+      </div>
+      {%endif%}
+    </div>
+  </div>
+    {%endfor%}
+    </div>
+    <div class="col-lg-3">
+      <br><br>
+      <div class="row d-flex justify-content-end">
+      <a class="btn btn-sm btn-outline-secondary mb-3" href='{% url "create-room" %}' role="button">Create Group</a>
+      </div>
+      
+      <div class="card w-100 mb-4 ml-3">
+        <div class="card-body">
+          <div class="row">
+          <div class="card-title "><h6>Spotlight</h6></div>
+        </div>
+          <div class="row">
+            <small><div class="card-text mb-2 text-muted ml-2"> <a href="{% url "home" %}?q={{spot.title}}">{{spot.topic}}</a></div></small>
+            <small><div class="card-text mb-2 ml-3">Host:</div> </small>
+            <small><div class="card-text mb-3 ml-2 text-muted"><a href="/profile/{{i.host.username}}/"> {{spot.host.username}}</a></div></small> 
+          </div> 
+          <div class="row">               
+          <h6><div class="card-subtitle ml-2"><a href="/room/{{spot.id}}/">{{spot.title}}</a></div></h6>
+        </div>
+    </div>
+    
+    </div>
+    <div class="card w-100 mb-4 ml-3">
+        <div class="card-body">
+          <div class="row">
+          <div class="card-title"><h6> Tending Topics:</h6></div>
+          </div>
+          {%for x in c%}
+          <div class="row">
+          <div class="card-text mb-3 ml-2"><a href="{% url "home" %}?q={{x.title}}">{{x.title}}</a></div>
+          </div>
+          {% endfor %}
+        </div>
+        </div>
+        
+    </div>
+    </div>
+    </div>
+    {%endblock%}
+{% comment %} {% include 'base.html'%}
+{% include 'bar.html'%}
+<!--<title>Home</title>-->
+{%block content%}
+<style>
+    .home{
+        display: grid;
+        column-gap: 50px;
+        grid-template-columns: 1.75fr 4fr;
+    } 
+
+</style>   
+<block class="home">
+    <div>
+    <h3>Topics</h3>
+    <h4><a href="{% url "home" %}">ALL</a></h4>
+    {%for j in t%}
+    <h4><a href="{% url "home" %}?q={{j.title}}">{{j.title}}</a></h4>
+    {%endfor%}
+    </div>  
+    <div> 
+    <h4 align="left"><a href="/create-room/">Create Room</a></h4>       
+    <h4>{{count}} rooms available</h4>
+    {%for i in l%}
+    <h4><a href="/profile/{{i.host.username}}/"> {{i.host.username}}</a></h4>
+    <h3><a href="/room/{{i.id}}/">{{i.title}}</a></h3>
+    <h4> {{i.topic}}</h4> 
+    <hr>  
+    {%endfor%}
+    </div>    
+</block>
+
+{%endblock%} {% endcomment %}

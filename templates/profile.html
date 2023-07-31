@@ -1,0 +1,185 @@
+{% include 'base+bar.html'%}
+{%block content%}
+<div class="container">
+  <div class="row gx-10 ">
+    <div class="col-lg-8">
+      <br><br>
+      {%if user.profile_photo.url is not NONE%}
+      <img src={{user.profile_photo.url}} alt="profile picture" class="rounded-circle"  width="100px">
+      {%endif%}
+      <div class="row">
+        <div class="col-lg-4">
+          <h5>{{user.username}}</h5>
+        </div>
+        <div class="col-lg-2">
+          <form method="post" action="" id="submit1">
+            {%csrf_token %}
+            <input type="hidden" value="host" name="m"/>
+          <div class="submit1" style="cursor: pointer;"><small>{{c}} Hosting</small></div>
+        </form>
+        </div>
+        <div class="col-lg-2">
+          <small>{{m}} Posts</small>
+        </div>
+        <div class="col-lg-2 d-flex justify-content-start">
+          <form method="post" action="" id="submit2">
+            {%csrf_token %}
+            <input type="hidden" value="fol" name="m"/>
+          <div class="submit2" style="cursor: pointer;"><small>{{fol_count}} Following</small></div>
+        </form>
+      </div>
+      <div class="col-lg-2 d-flex justify-content-start">
+        <div class="dropdown">
+        <div class="dropdown  d-flex justify-content-end">
+            <button class="btn btn-sm btn-outline-secondary " type="button" id="dropdown" data-toggle="dropdown" >
+              <img src="/app/files/default/share.png" alt="share"  width="20px">
+            </button>
+            <div class="dropdown-menu">
+            <a class="dropdown-item " href="https://www.facebook.com/sharer/sharer.php?u=http://{{request.build_absolute_uri|urlencode}}">Facebook</a>
+            <a class="dropdown-item" href="https://twitter.com/home?status=http://{{request.build_absolute_uri|urlencode}}">Twitter</a>
+            <a class="dropdown-item" href="http://www.reddit.com/submit?url=http://{{request.build_absolute_uri|urlencode}}">Reddit</a>
+            <a class="dropdown-item" href="https://wa.me/?text=http://{{request.build_absolute_uri|urlencode}}">WhatsApp </a>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class ="row ml-1">
+      <small>Bio:</small>
+      <small>{{user.Bio}}</small>
+    </div>
+    <div class="row mt-4">
+    <div class="card w-100  ml-3">
+      <div class="card-body">
+        <div class="row">
+        <div class="card-title"><h6>Recent Activity</h6></div>
+        </div>
+        {%if m is not 0%}
+        {%for m1 in message%}
+        <small><div class="card-text mb-2">Posted in room: <a href="/room/{{m1.room.id}}/">{{m1.room}}</a>  {{m1.created|timesince}} ago</small></div>
+        <small><div class="card-text mb-2">{{m1.body}}</div></small>
+        <br>
+       {%endfor%}
+       {%else%}
+       <small><div class="card-text mb-2">No recent activity</div></small>
+       {%endif%}
+      </div>   
+    </div>
+  </div> 
+  </div>
+  <div class="col-lg-4">
+    <br><br>
+    {%if hos is 1%}
+    <div class="card w-100 mb-4 ml-3">
+      <div class="card-body">
+        <div class="row">
+        <div class="card-title"><h6>Host of</h6></div>
+        </div>
+        {%for room in rooms%}
+              <div class="row ml-auto">
+                <small><div class="card-text mb-2"><a href="/room/{{room.id}}/">{{room.title}}</a></div></small>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                <small><div class="card-text">Topic: {{room.topic}}</div></small>
+                </div>
+                <div class="col-lg-6">
+                {%if not room.desc %}  
+                <small><div class="card-text">Desc: No desc</div></small>
+                {%else%}
+                <small><div class="card-text">Desc: {{room.desc}}</div></small>
+                {%endif%}
+              </div>
+              </div>
+              <br>
+              
+        {%endfor%}
+    {%endif%}
+    {%if fol is 1%}
+    <div class="card w-100 mb-4 ml-3">
+      <div class="card-body">
+        <div class="row">
+        <div class="card-title"><h6>Following</h6></div>
+        </div>
+        {%for f in f%}
+              <div class="row ml-auto">
+                <small><div class="card-text mb-2"><a href="/room/{{f.following.id}}/">{{f.following.title}}</a></div></small>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                <small><div class="card-text">Topic: {{f.following.topic}}</div></small>
+                </div>
+                <div class="col-lg-6">
+                  {%if not f.following.desc %}
+                  <small><div class="card-text">Desc: No desc</div></small> 
+                  {%else%} 
+               <small><div class="card-text">Desc: {{f.following.desc}}</div></small>
+                {%endif%}
+              </div>
+              </div>
+              <br>
+              
+        {%endfor%}
+    {%endif%}
+</div>
+</div>
+{%endblock%}
+<script>
+  const myForm = document.getElementById("submit1");
+  const myForm1 = document.getElementById("submit2");
+document.querySelector(".submit1").addEventListener("click", function(){
+
+  myForm.submit();
+
+});
+document.querySelector(".submit2").addEventListener("click", function(){
+
+  myForm1.submit();
+
+});
+</script>
+{% comment %} {%if user.profile_photo.url is not NONE%} 
+<center>
+  <img src={{user.profile_photo.url}} width="140px">
+</center>
+{%endif%}
+<h2 align="center" style="color:white;">{{user.username}}</h2>
+<p align="center" style="color:white;">{{user.first_name}}  {{user.last_name}}</p>
+{%if b != ""  %}
+<p align="center" style="color:white;">Bio: {{user.Bio}}</p>
+{%endif%}
+<style>
+.profile{
+    display: grid;
+    column-gap: 50px;
+    grid-template-columns: 3fr 4fr;
+}
+</style>
+ {% comment %} {%if request.user == user %}
+<small>Edit Profile</small> 
+{%endif%} 
+ <hr>     
+{%if c is not 0%}
+<block class="profile">
+<div>
+<h3>Host of:</h3>
+{%for i in rooms%}
+<h3><a href="/room/{{i.id}}/">{{i.title}}</a></h3>
+<h4> {{i.topic}}</h4> 
+<hr> 
+{%endfor%}
+</div>
+{%endif%}
+<div>
+<h3 >Recent activity:</h3>
+{%if m is not 0%}
+{%for m1 in message%}
+<small>Posted in room: <a href="/room/{{m1.room.id}}/">{{m1.room}}</a>  {{m1.created|timesince}} ago</small>
+<li>{{m1.body}}</li>
+<hr>
+{%endfor%}
+{%else%}
+<li>No recent activity</li>
+{%endif%}
+</block> 
+{%endblock%}{% endcomment %}

@@ -1,0 +1,27 @@
+{% include 'base+bar.html'%}
+{%block content%}
+<div class="container">
+    <br>
+    <h4>Create Group</h4>
+    <br>
+    <div class="form-group ">
+    {%if c is 0%}
+    <form method="POST" action="">
+        {%csrf_token%}
+        <label>Topic:</label><input type="text" class="form-control-file" name="Topic" placeholder="Enter Topic..."/><br>
+        <label>Title:</label><input type="text" class="form-control-file" name="Title" placeholder="Enter Title..."/><br>
+        <label>Description:</label><input type="text" class="form-control-file" name="Desc" placeholder="Enter Description..."/><br>
+        <input type="submit" class="btn  btn-sm btn-secondary" name="Submit" value="Submit"/>
+    </form>
+    {%elif c is 1%}
+    <form method="POST" action="">
+        {%csrf_token%}
+        <p><label>Topic:</label><input type="text" class="form-control-file" name="Topic" value="{{room.topic}} "/></p>
+        <p><label>Title:</label><input type="text" class="form-control-file" name="Title" value="{{room.title}}"/></p>
+        <p><label>Description:</label><input type="text" class="form-control-file" name="Desc" value="{{room.desc}} "/></p>
+        <input type="submit" class="btn  btn-sm btn-secondary"  name="Submit" value="Submit"/>
+    </form>
+    {%endif%}   
+</div>    
+</div>
+{%endblock%}

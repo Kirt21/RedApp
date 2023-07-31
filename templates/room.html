@@ -1,0 +1,382 @@
+{% include 'base+bar.html'%}
+{% load social_share %}
+<style>
+    .forward:hover{
+    color: #404040;
+    text-decoration: underline;
+  }
+</style> 
+{%block context%}
+    <div class="container">
+      <div class="row gx-10 ">
+        <div class="col-lg-2">
+          <br><br>
+          {%if gr is 1%}
+          <div class="row">
+            <h6>Groups following</h6>
+          </div>
+          {%if g is not NONE%}
+            {%for g in g%}
+            <div class="row">
+            <small><a href="/room/{{g.following.id}}/">{{g.following.title}}</a></small>
+            </div>
+            <br>
+            {%endfor%}
+            {%endif%}
+          {%else%}
+          <div class="row">
+            <h6>{{l.topic}} also has</h6>
+          </div>
+            {%if r is not NONE%}
+            {%for r in r%}
+            <div class="row">
+            <small><a href="/room/{{r.id}}/">{{r.title}}</a></small>
+            </div>
+            <br>
+            {%endfor%}
+            {%endif%}
+            {%endif%}
+          </div>
+          
+        <div class="col-lg-7">
+          <br><br>
+          <div class="row">
+          <div class="col-lg-4">
+            <h5>{{l.title}}</h5>
+          </div>
+          <div class="col-lg-2 d-flex justify-content-end">
+            <form method="post" action="" id="submit1">
+              {%csrf_token %}
+              <input type="hidden" value="folow" name="m"/>
+            <div class="submit1 forward" style="cursor: pointer;"><small>{{f_count}} Followers</small></div>
+         </form>
+            {% comment %} <input  type="submit" name='m' value="Followers"/>
+          </form> {% endcomment %}
+          </div>
+          <div class="col-lg-3 d-flex justify-content-center">
+            <form method="post" action="" id="submit2">
+              {%csrf_token %}
+              <input type="hidden" value="par" name="m"/>
+            <div class="submit2 forward" style="cursor: pointer;"><small>{{p_count}} Participants</small></div>
+          </form>
+
+            {% comment %} <input type="submit" name='m' value="participants"/>
+          </form> {% endcomment %}
+          </div>
+          <div class="col-lg-2">
+            {%if fol is False%}
+            <form method="post" action="/follow/">
+              {%csrf_token %}
+              <input type="hidden" value={{l.id}} name="following"/>
+              <input class="btn btn-sm btn-outline-secondary " style="color:black;" type="submit" value="Follow"/>
+            </form>
+            {%else%}
+              <form method="post" action="/unfollow/">
+              {%csrf_token %}
+              <input type="hidden" value={{l.id}} name="following"/>
+              <input class="btn btn-sm btn-outline-secondary " style="color:black;" type="submit" value="Unfollow"/>
+               </form>
+
+            {%endif%}
+          </div>
+          <div class="col-lg-1">
+            <div class="dropdown">
+            <div class="dropdown d-flex justify-content-end">
+                <button class="btn btn-sm btn-outline-secondary" type="button" id="dropdown" data-toggle="dropdown" >
+                  <img src="/app/files/default/share.png" alt="share"  width="20px">
+                </button>
+                <div class="dropdown-menu">
+                <a class="dropdown-item " href="https://www.facebook.com/sharer/sharer.php?u=http://{{request.build_absolute_uri|urlencode}}">Facebook</a>
+                <a class="dropdown-item" href="https://twitter.com/home?status=http://{{request.build_absolute_uri|urlencode}}">Twitter</a>
+                <a class="dropdown-item" href="http://www.reddit.com/submit?url=http://{{request.build_absolute_uri|urlencode}}">Reddit</a>
+                <a class="dropdown-item" href="https://wa.me/?text=http://{{request.build_absolute_uri|urlencode}}">WhatsApp </a>
+                </div>
+            </div>
+            </div>
+          </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-lg-4">
+              {%if l.host.profile_photo.url is not NONE%}
+                <img src={{l.host.profile_photo.url}} alt="profile picture" class="rounded-circle"  width="40px">
+                {%else%}
+                <img src="/app/files/default/profile photo.jpg" alt="profile picture" class="rounded-circle"  width="40px">
+                {%endif%}
+              <small><a href="/profile/{{l.host}}/">{{l.host}}</a></small>
+            </div>
+            <div class="col-lg-4 ">
+              <small>Topic : {{l.topic}}</small>
+            </div>
+          </div>
+          <div class="row ml-auto mb-3">
+            {%if not l.desc %}  
+            <small><div class="card-text">Desc: No desc</div></small>
+            {%else%}
+            <small><div class="card-text">Desc: {{l.desc}}</div></small>
+            {%endif%}
+          </div> 
+          <div class="row mb-3">
+            <div class="card w-100 mb-3 ml-3">
+              <div class="card-body">
+                <div class="row mb-3">
+                  <div class="card-title "><h6>Conversation</h6></div>
+                </div> 
+                {%for m1 in m%}
+                {% comment %} {%if m1.user_name is request.user%}
+                <div class="row me-3 mb-3 d=flex justify-content-end">
+                  <div class="card-text">{{m1.body}}</div>
+                </div>
+                {%else%} {% endcomment %}
+                {%if m1.user_name.id is not request.user.id%}
+                <div class="row mb-2 ml-3"> 
+                {%if m1.user_name.profile_photo.url is not NONE%}
+                <img src={{m1.user_name.profile_photo.url}} alt="profile picture" class="rounded-circle"  width="40px">
+                {%else%}
+                <img src="/app/files/default/profile photo.jpg" alt="profile picture" class="rounded-circle"  width="40px">
+                {%endif%}
+                <small><div class="card-text ml-2 d-flex justify-content-center "><a href="/profile/{{m1.user_name}}/">{{m1.user_name}}</a></small></div>
+                <small><div class="card-text ml-4">{{m1.created|timesince}} ago..</div></small>
+                </div>
+                <div class="row ml-3 mb-3">
+                  <div class="card-text">{{m1.body}}</div>
+                </div>
+                {%else%}
+                <div class="row mb-2 ml-3 d-flex justify-content-end"> 
+                  <small><div class="card-text d-flex justify-content-center">Me</small></div>
+                  <small><div class="card-text ml-4">{{m1.created|timesince}} ago..</div></small>  
+                </div>
+                  <div class="row ml-3 mb-3 d-flex justify-content-end">
+                    <div class="card-text">{{m1.body}}</div>
+                  </div>
+                
+                  {%endif%}
+                {% comment %} {%endif%} {% endcomment %}
+               {%endfor%}
+      
+              </div>
+            </div>
+          </div>
+          <div class='row ml-2'>
+          <div class="form-group ">
+            <form autocomplete="off" method='POST' action='' id="submit3">
+              {%csrf_token%}
+              <div class="row ml-auto">
+              <input class="form-control-textarea" name ="Message" placeholder="Enter your message..." />
+              {% comment %} <input class="btn  btn-sm btn-outline-secondary ml-2" onClick="submit3()"  style="color:black;" name="message" value="Submit"/> {% endcomment %}
+              <div class="submit3"><button class="btn  btn-sm btn-outline-secondary ml-2" style="color:black;" name="message"> Submit</button></div>
+              </div>
+            </form>
+          </div>
+        </div>
+        </div>
+        <div class="col-lg-3">
+          <br><br>
+          {%if par is 1%}
+          <div class="card w-100 mb-4">
+            <div class="card-body">
+              <div class="row">
+              <div class="card-title "><h6>Participants</h6></div>
+              </div>
+              {%for p in p%}
+              <div class="row">
+                {%if p.profile_photo.url is not NONE%}
+                <img src={{p.profile_photo.url}} alt="profile picture" class="rounded-circle"  width="40px">
+                {%else%}
+                <img src="/app/files/default/profile photo.jpg" alt="profile picture" class="rounded-circle"  width="40px">
+                {%endif%}
+                <small><div class="card-text mb-2"><a href="/profile/{{p.username}}/">{{p.username}}</a></div></small>
+              </div>
+              <br>
+              
+                {%endfor%}
+              </div>
+            
+            </div>
+          {%elif folow is 1%}
+             <div class="card w-100 mb-4 ml-3">
+             <div class="card-body">
+              <div class="row">
+              <div class="card-title "><h6>Followers</h6></div>
+              </div>
+              {%for f in f%}
+              <div class="row">
+                {%if f.follower.profile_photo.url is not NONE%}
+                <img src={{f.follower.profile_photo.url}} alt="profile picture" class="rounded-circle"  width="40px">
+                {%else%}
+                <img src="/app/files/default/profile photo.jpg" alt="profile picture" class="rounded-circle"  width="40px">
+                {%endif%}
+                <small><div class="card-text mb-2"><a href="/profile/{{f.follower.username}}/">{{f.follower.username}}</a></div></small>
+              </div>
+              <br>
+              
+              {%endfor%}
+              </div>
+          {%endif%}
+              </div>
+            
+    </div>
+   
+</div>
+</div>
+{%endblock%}
+<script>
+const myForm = document.getElementById("submit1");
+const myForm1 = document.getElementById("submit2");
+document.querySelector(".submit1").addEventListener("click", function(){
+
+  myForm.submit();
+});
+
+document.querySelector(".submit2").addEventListener("click", function(){
+  myForm1.submit();
+});  
+
+function submit3(){
+  const form = document.getElementById("submit3");
+  event.preventdefault();
+  form.submit();
+}
+{% comment %} function submit1(){
+  let form1 = document.getElementById("submit1");
+  form1.addEventListener("click", function(){
+
+    form1.submit();
+  });
+} 
+function submit2(){
+  let form2 = document.getElementById("submit2");
+  document.querySelector(".submit2").addEventListener("click", function(){
+    form2.submit();
+  });
+}{% endcomment %}
+</script>
+{% comment %} {%block content%}
+<style>
+  table,th,td{}
+    .grid{
+        display: grid;
+        column-gap: 50px;
+        grid-template-columns: 5fr 2fr;
+    }
+    .top{
+    color:white;
+    }
+    .button {
+      background-color: WhiteSmoke;
+      border: none;
+      color: #0288D1;
+      padding: 10px 20px;
+      border-radius:50px;
+      text-align: center;
+      display: inline-block;
+      font-size: 20px;
+      ursor: pointer;
+    
+  }
+    .dropdown {
+    position: relative;
+    display: inline-block;
+    }
+    .dropdown-content {
+    display: none;
+    position: absolute;
+    right=0;
+    }
+
+   .dropdown-content a{
+    color: #0288D1;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+    } 
+  
+    .dropdown-content a:hover {
+    background-color:#F8F8F8;
+    } 
+
+    .dropdown:hover .dropdown-content {
+    display: block;
+    }
+
+</style>
+<block class="grid">
+<div>
+  <form method="post" action="/follow/">
+  {%csrf_token %}
+  <input type="hidden" value={{l.id}} name="following"/>
+  <input type="submit" value="Follow"/>
+   </form>
+   <form method="post" action="/unfollow/">
+    {%csrf_token %}
+    <input type="hidden" value={{l.id}} name="following"/>
+    <input type="submit" value="Unfollow"/>
+     </form>
+   <h3>{{count}}</h3>
+<table style="width=100%">
+<tr>  
+<th style="width:90%;"><h2 align="left" style="color:white;">{{l.title}}</h2></th>
+<th><block class="dropdown">
+  <block class="button">Share</block>
+  <block class="dropdown-content">
+    <a {%post_to_facebook  object_or_url "Facebook!"%}
+    <a {% post_to_whatsapp object_or_url "Whatsapp!"%}
+    <a {% post_to_twitter "Check it out!" object_or_url "Twitter!" %}
+    
+  </a>
+  </block>
+</block>
+</th>
+</tr>
+</table>
+<h4 style="color:white;"><a href="/profile/{{l.host}}/">{{l.host}}</h4></a>
+<label style="color:white;">Description:</label>
+{%if d is not 0%}
+<p style="color:white;">{{l.desc}}</p>
+{%else%}
+<p style="color:white;">No description available</p>
+{%endif%}
+<h5 style="color:white;">{{l.topic}}</h5>
+<h5 style="color:white;">{{l.created}}</h5>
+{%if request.user == l.host%}
+<small style="color:#0288D1;"><a href='/update-room/{{l.id}}'>Update </a></small>
+<small style="color:#0288D1;"><a href='/delete-room/{{l.id}}'>Delete </a></small>
+{%endif%}
+</div>
+<div>
+  <h3 style="color:white;">Participants:</h3>
+  {%for p in p%}
+{%if p.profile_photo.url is not NONE%}
+<img style="width:50px" src={{p.profile_photo.url}} alt="profile picture">
+{%endif%}
+  <small><a href="/profile/{{p.username}}/">{{p.username}}</a></small>
+  <br>
+  <br>
+  {%endfor%}
+
+</div>
+</block>
+
+<h3 style="color:white;">Conversation:</h3>
+
+<div>
+{%for m1 in m%}
+{%if m1.user_name.profile_photo.url is not NONE%}
+<img style="width:50px" src={{m1.user_name.profile_photo.url}} alt="profile picture">
+{%endif%}
+<small><a href="/profile/{{m1.user_name}}/">{{m1.user_name}}</a>  {{m1.created|timesince}} ago</small>
+<p>{{m1.body}}</p>
+{%if request.user == m1.user_name %}
+{% comment %} <small><a href="{% url "Edit-message" m1.id %}">Edit</a></small> 
+<small><a href="{% url "delete-message" m1.id %}">Delete</a></small>
+<br><br>
+{%endif%} 
+  {%endfor%}
+</div>
+<div>
+<form autocomplete="off" method='POST' action=''>
+    {%csrf_token%}
+    <textarea cols="" rows="" type="textarea" name ="Message" placeholder="Enter your message" /></textarea>
+    <input type="Submit" value="Submit"/>
+  </form>
+</div>
+{%endblock%} {% endcomment %}

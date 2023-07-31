@@ -1,0 +1,22 @@
+{% include 'base+bar.html'%}
+{%block context%}
+<div class=" container">
+    <br>
+    <h4>Login</h4>
+    <br>
+    <div class="form-group ">
+<form autocomplete="off" method="POST" action="">
+    {%csrf_token%}
+    <label>Username</label><br>
+    <input type="text" class="form-control-file" name="username" placeholder="Enter Username..."/>
+    <br><label>Password</label><br>
+    <input type="password" class="form-control-file" name="password" placeholder="Enter Password..."/>
+    <br>
+    <input type="submit" class="btn  btn-sm btn-outline-secondary"  style="color:black;" value="login"/>  
+</form>
+<br>
+<p>Haven't signed up yet?</p>
+<h5><a href="{%url "registerpage"%}">Register</a></h5>
+</div>
+</div>
+{%endblock%}
